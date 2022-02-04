@@ -7,33 +7,25 @@
 # Pre-requisites: 
 # - Need to have downloaded the ACS data and saved it to inputs/data
 # - Don't forget to gitignore it!
-# - Change these to yours
-# Any other information needed?
-
-
-#### Workspace setup ####
-library(tidyverse)
-library(opendatatoronto)
 
 #### Data Download ####
 # From https://open.toronto.ca/dataset/neighbourhood-crime-rates/
 
-# Datasets are grouped into 'packages' that have multiple datasets 
-# also called 'resources' that are relavant to that topic. So we first 
-# look at the package using a unique key that we obtain from the 
-# datasets webpage. (see above)
+library(opendatatoronto)
+library(tidyverse)
+
+# get package
+package <- show_package("fc4d95a6-591f-411f-af17-327e6c5d03c7")
 
 # get all resources for this package
 resources <- list_package_resources("fc4d95a6-591f-411f-af17-327e6c5d03c7")
 
-# We need the unique key from that list of resources
+# identify datastore resources; by default, #Toronto Open Data sets datastore
+# resource format to CSV for non-geospatial #and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
 
-# There is only one resource, so get_resource will load that.
-crime_rate_neighborhood <- 
-  resources %>%
-  get_resource()
+# load the first datastore resource as a #sample
+crime <- filter(datastore_resources, row_number()==1) %>% get_resource()
 
-#### Save data ####
-write.csv(crime_rate_neighborhood, "inputs/data/crime_rate_neighborhood.csv")
-
-
+write_csv(crime, "inputs/data/crime.csv")
+#read_csv("crime.csv")

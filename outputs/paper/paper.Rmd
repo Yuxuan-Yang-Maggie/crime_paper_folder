@@ -11,13 +11,6 @@ toc: FALSE
 bibliography: references.bib
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-library(tidyverse)
-library(palmerpenguins)
-```
-
 # Introduction
 First paragraph is going to be motivational and broad.
 
@@ -30,7 +23,7 @@ The remainder of this paper is: Section \@ref(data) explains the data. Section
 
 # Data
 ## Data Source And Collection Methods
-This paper uses data on neighborhood crime rates published by the Toronto Police Services on the City of Toronto Open Data Portal; the data was last refreshed on May 6, 2021, and I imported the data as csv file directly using the R package opendatatoronto (Gelfand, 2020). This dataset contains information on numbers of different types of crimes in each of the 140 Toronto neighborhoods from the year 2014 to 2020, together with crime rates of different types of crimes in each neighborhood from 2014 to 2020, where the crime rate is calculated as the crime count per 100,000 population* per year in each neighborhood (cite opendatatoronto here). 
+This paper uses data on neighborhood crime rates published by the Toronto Police Services on the City of Toronto Open Data Portal (Data 2020); the data was last refreshed on May 6, 2021, and I imported the data as csv file directly using the R package opendatatoronto (Gelfand, 2020). This dataset contains information on numbers of different types of crimes in each of the 140 Toronto neighborhoods from the year 2014 to 2020, together with crime rates of different types of crimes in each neighborhood from 2014 to 2020, where the crime rate is calculated as the crime count per 100,000 population* per year in each neighborhood (cite opendatatoronto here). 
 
 The Toronto Police Service did not specify how exactly the crime cases in this dataset were processed, but it mentions that the crime rates were calculated using "the standard definition by StatsCan" (cite here). In addition, crimes can be reported to the Police and collected through many channels. For example, citizens can voluntarily report crimes they have experienced or observed. It is also possible that the Police will discover crimes on site through daily patrols. Nevertheless, the fact that crimes can be self-reported indicates the possibility of crimes being under-reported, which could result in potential bias of number of crime cases on record. 
 
@@ -44,56 +37,90 @@ Respondents in our Neighborhood Crime Rates dataset are the reporters of crime c
 The most important feature of Open Data Toronto is that it can be easily accessed and reproduced by the general public. While a typical strength of Open Data Toronto would be that it facilitates the flow of information across different government sections and also between the government and the general public, it also ensures the greatest extent of transparency and authenticity while conveying reliable data to citizens. Nevertheless, Open Data Toronto also has a severe weakness, which is the problem of missing information. 
 
 ## Data characteristics
-```{r}
-# Select neighborhood names, # 
+
+```{r, echo=FALSE, warning=FALSE}
+library(tidyverse)
+crime <- read_csv("~/starter_folder/inputs/data/crime.csv")
+#head(crime)
+```
+
+```{r, echo=FALSE}
+# Select neighborhood names and calculate number of crimes for each year
+crime_per_hood <- crime %>%
+  mutate(crime_2014 = Assault_2014 + AutoTheft_2014 + BreakAndEnter_2014 +
+           Robbery_2014 + TheftOver_2014 + Homicide_2014 + Shootings_2014,
+         crime_2015 = Assault_2015 + AutoTheft_2015 + BreakAndEnter_2015 +
+           Robbery_2015 + TheftOver_2015 + Homicide_2015 + Shootings_2015,
+         crime_2016 = Assault_2016 + AutoTheft_2016 + BreakAndEnter_2016 +
+           Robbery_2016 + TheftOver_2016 + Homicide_2016 + Shootings_2016,
+         crime_2017 = Assault_2017 + AutoTheft_2017 + BreakAndEnter_2017 +
+           Robbery_2017 + TheftOver_2017 + Homicide_2017 + Shootings_2017,
+         crime_2018 = Assault_2018 + AutoTheft_2018 + BreakAndEnter_2018 +
+           Robbery_2018 + TheftOver_2018 + Homicide_2018 + Shootings_2018,
+         crime_2019 = Assault_2019 + AutoTheft_2019 + BreakAndEnter_2019 +
+           Robbery_2019 + TheftOver_2019 + Homicide_2019 + Shootings_2019,
+         crime_2020 = Assault_2020 + AutoTheft_2020 + BreakAndEnter_2020 +
+           Robbery_2020 + TheftOver_2020 + Homicide_2020 + Shootings_2020)
+```
+
+```{r, echo=FALSE}
+crime_per_hood <- crime_per_hood %>%
+  select(Neighbourhood, F2020_Population_Projection, crime_2014, crime_2015,
+         crime_2016, crime_2017, crime_2018, crime_2019, crime_2020)
+```
+
+```{r, echo=FALSE}
+# convert the table from wide to long
+new_crime_hood <- gather(crime_per_hood, crime_year, num_crime,
+                         crime_2014:crime_2020, factor_key=TRUE)
+
+new_crime_hood <- new_crime_hood %>%
+  mutate(year = case_when(crime_year == "crime_2014" ~ 2014,
+                          crime_year == "crime_2015" ~ 2015,
+                          crime_year == "crime_2016" ~ 2016,
+                          crime_year == "crime_2017" ~ 2017,
+                          crime_year == "crime_2018" ~ 2018,
+                          crime_year == "crime_2019" ~ 2019,
+                          crime_year == "crime_2020" ~ 2020))
+```
+
+```{r, echo = FALSE}
+library(knitr)
+
+new_crime_hood %>%
+  select(Neighbourhood, F2020_Population_Projection, num_crime, year) %>%
+  slice(1:10) %>%
+  kable(caption = "First 10 rows of our long dataset showing crimes per year
+        per neighborhood")
+  
+```
+
+
+```{r, fig.cap="Crime growth of top 5 neighborhoods with most population from 2014 to 2020, echo = FALSE"}
+# Plot number of crimes on y-axis and year on x-axis for 5 neighborhoods 
+# with highest populations in 2020
+new_crime_hood %>%
+  filter(Neighbourhood %in% c("Waterfront Communities-The Island", "Woburn",
+                            "Willowdale East", "Islington-City Centre West",
+                            "Rouge")) %>%
+  ggplot(aes(x=year, y=num_crime, group=Neighbourhood, color=Neighbourhood)) +
+  geom_line() +
+  labs(title = "Toronto Crime Cases",
+       subtitle = "Top 5 Neighborhoods with Most Populations",
+       x = "Year",
+       y = "Number of Crimes") +
+  theme_minimal()
 ```
 
 Our data is of penguins (Figure \@ref(fig:bills)).
 
-```{r bills, fig.cap="Bills of penguins", echo = FALSE}
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
+
 
 Talk more about it.
 
 Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
 
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=4}
-
-# This needs to be about the random data tha tI sasmpled?
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
-
 Talk way more about it. 
-
-
-
-# Model
-
-\begin{equation}
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}  (\#eq:bayes)
-\end{equation}
-
-Equation \@ref(eq:bayes) seems useful, eh?
-
-Here's a dumb example of how to use some references: In paper we run our analysis in `R` [@citeR]. We also use the `tidyverse` which was written by @thereferencecanbewhatever If we were interested in baseball data then @citeLahman could be useful. 
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
 
 # Discussion
 
