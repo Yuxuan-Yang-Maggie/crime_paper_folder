@@ -1,10 +1,8 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "Crime Rates in Toronto Neighborhoods By Year and Type"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Yuxuan Yang
+thanks: "Code and data are available at: https://github.com/Yuxuan-Yang-Maggie/starter_folder."
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 output:
@@ -21,12 +19,34 @@ library(palmerpenguins)
 ```
 
 # Introduction
+First paragraph is going to be motivational and broad.
 
-You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
+Second paragraph is about what was done and what was found.
 
+Third paragraph is about implications.
 
+The remainder of this paper is: Section \@ref(data) explains the data. Section 
+\@ref(results) covers results...... 
 
 # Data
+## Data Source And Collection Methods
+This paper uses data on neighborhood crime rates published by the Toronto Police Services on the City of Toronto Open Data Portal; the data was last refreshed on May 6, 2021, and I imported the data as csv file directly using the R package opendatatoronto (Gelfand, 2020). This dataset contains information on numbers of different types of crimes in each of the 140 Toronto neighborhoods from the year 2014 to 2020, together with crime rates of different types of crimes in each neighborhood from 2014 to 2020, where the crime rate is calculated as the crime count per 100,000 population* per year in each neighborhood (cite opendatatoronto here). 
+
+The Toronto Police Service did not specify how exactly the crime cases in this dataset were processed, but it mentions that the crime rates were calculated using "the standard definition by StatsCan" (cite here). In addition, crimes can be reported to the Police and collected through many channels. For example, citizens can voluntarily report crimes they have experienced or observed. It is also possible that the Police will discover crimes on site through daily patrols. Nevertheless, the fact that crimes can be self-reported indicates the possibility of crimes being under-reported, which could result in potential bias of number of crime cases on record. 
+
+## Population and Samples
+The population of this dataset is the total population in each Toronto neighborhood in each year from 2014 to 2020. Note that the total population in each neighborhood in this dataset is only a projection estimated by Environics Analytics instead of the true value. The sampling frame is all the crime cases reported and recorded in this dataset. 
+
+## How Respondents Were Found
+Respondents in our Neighborhood Crime Rates dataset are the reporters of crime cases in each neighborhood. Since crime cases are mainly collected through either self-reporting or police discoveries, our respondents here are discovered by the Toronto Police Service if evidences of crime are observed. In terms of crime data, the action of non-response will cause crime cases in Toronto to be under-reported and under-represented, leading to significant bias in the results of our crime data analysis. 
+
+## Key Features, Major Strengths And Weaknesses
+The most important feature of Open Data Toronto is that it can be easily accessed and reproduced by the general public. While a typical strength of Open Data Toronto would be that it facilitates the flow of information across different government sections and also between the government and the general public, it also ensures the greatest extent of transparency and authenticity while conveying reliable data to citizens. Nevertheless, Open Data Toronto also has a severe weakness, which is the problem of missing information. 
+
+## Data characteristics
+```{r}
+# Select neighborhood names, # 
+```
 
 Our data is of penguins (Figure \@ref(fig:bills)).
 
