@@ -18,12 +18,12 @@ Second paragraph is about what was done and what was found.
 
 Third paragraph is about implications.
 
-The remainder of this paper is: Section \@ref(data) explains the data. Section 
-\@ref(results) covers results...... 
+The remainder of this paper is: Section \@ref(data) explains the data. 
+Section \@ref(Discussion) covers discussions...... 
 
 # Data
 ## Data Source And Collection Methods
-This paper uses data on neighborhood crime rates published by the Toronto Police Services on the City of Toronto Open Data Portal (Data 2020); the data was last refreshed on May 6, 2021, and I imported the data as csv file directly using the R package opendatatoronto (Gelfand, 2020). This dataset contains information on numbers of different types of crimes in each of the 140 Toronto neighborhoods from the year 2014 to 2020, together with crime rates of different types of crimes in each neighborhood from 2014 to 2020, where the crime rate is calculated as the crime count per 100,000 population* per year in each neighborhood (cite opendatatoronto here). 
+This paper uses data on neighborhood crime rates published by the Toronto Police Services on the City of Toronto Open Data Portal (Data 2020); the data was last refreshed on May 6, 2021, and I imported the data as csv file directly using the R package opendatatoronto (Gelfand, 2020). This dataset contains information on numbers of different types of crimes in each of the 140 Toronto neighborhoods from the year 2014 to 2020, together with crime rates of different types of crimes in each neighborhood from 2014 to 2020, where the crime rate is calculated as the crime count per 100,000 population* per year in each neighborhood.
 
 The Toronto Police Service did not specify how exactly the crime cases in this dataset were processed, but it mentions that the crime rates were calculated using "the standard definition by StatsCan" (cite here). In addition, crimes can be reported to the Police and collected through many channels. For example, citizens can voluntarily report crimes they have experienced or observed. It is also possible that the Police will discover crimes on site through daily patrols. Nevertheless, the fact that crimes can be self-reported indicates the possibility of crimes being under-reported, which could result in potential bias of number of crime cases on record. 
 
@@ -37,8 +37,15 @@ Respondents in our Neighborhood Crime Rates dataset are the reporters of crime c
 The most important feature of Open Data Toronto is that it can be easily accessed and reproduced by the general public. While a typical strength of Open Data Toronto would be that it facilitates the flow of information across different government sections and also between the government and the general public, it also ensures the greatest extent of transparency and authenticity while conveying reliable data to citizens. Nevertheless, Open Data Toronto also has a severe weakness, which is the problem of missing information. 
 
 ## Data characteristics
+I am interested in the growth of crimes cases in Toronto neighborhoods from 2014 to 2020. The first thing I did is to write our crime dataset into csv file and read this csv file using the **R** programming language (R Core Team 2020) and R package **tidyverse** (Wickham et al. 2021). Then I created new variables to record total crimes per neighborhood in each year. I also selected Neighrbourhood, population, and all the new variables I just created and transformed them into a new, long dataset using the **gather** function from **tidyr** package (Wickham et al. 2021). 
 
-```{r, echo=FALSE, warning=FALSE}
+I chose to ignore all the crime rates data and only focus on the number of crime cases because I wanted to see whether crime cases in Toronto have  declined or rose from 2014 to 2020. I also ignored Hood_ID and OBJECTID because they are hard to recognize. What's more, I ignored the specific types of crimes and geometry since I am only interested in total crime cases. 
+
+Instead of specific summary statistics, I created a table using the **kable** function and **knitr** package (Xie, 2021) to show the first 10 observations of the long dataset I created (Table 1). This table contains columns recording neighborhood names, population per neighborhood, year, and crime cases per neighborhood per year. 
+
+\newpage
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 crime <- read_csv("~/starter_folder/inputs/data/crime.csv")
 #head(crime)
@@ -84,7 +91,7 @@ new_crime_hood <- new_crime_hood %>%
                           crime_year == "crime_2020" ~ 2020))
 ```
 
-```{r, echo = FALSE}
+```{r Table1, echo = FALSE, warning=FALSE}
 library(knitr)
 
 new_crime_hood %>%
@@ -94,9 +101,11 @@ new_crime_hood %>%
         per neighborhood")
   
 ```
+\newpage
 
-
-```{r, fig.cap="Crime growth of top 5 neighborhoods with most population from 2014 to 2020, echo = FALSE"}
+From \@ref(fig:FIgure1), we observed number of total crimes from 10 different neighborhoods in 2014. We then created a line graph using **ggplot2** package (Wickham, 2016) to get an insight on how crime cases developed over the course of 7 years. Here we chose the top 5 neighborhoods with most populations as examples to show the trend of crime growth. 
+\newpage
+```{r Figure1, fig.cap="Crime growth of top 5 neighborhoods with most population from 2014 to 2020", echo = FALSE, message=FALSE}
 # Plot number of crimes on y-axis and year on x-axis for 5 neighborhoods 
 # with highest populations in 2020
 new_crime_hood %>%
@@ -112,15 +121,10 @@ new_crime_hood %>%
   theme_minimal()
 ```
 
-Our data is of penguins (Figure \@ref(fig:bills)).
 
 
+From Figure \@ref(fig:Figure1), we observed a steady increase in crime cases in Waterfront Communities-The Island from 2014 to 2018 and decrease from 2018 to 2020. For the other 4 neighborhoods, the number of crime cases are relatively steady from 2014 to 2020. 
 
-Talk more about it.
-
-Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
-
-Talk way more about it. 
 
 # Discussion
 
