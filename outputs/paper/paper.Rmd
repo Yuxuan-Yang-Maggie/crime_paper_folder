@@ -1,10 +1,10 @@
 ---
-title: "Crime Rates in Toronto Neighborhoods By Year and Type"
+title: "Number of Toronto Crime Cases Is Changing From Rising To Declining"
 author: 
   - Yuxuan Yang
 thanks: "Code and data are available at: https://github.com/Yuxuan-Yang-Maggie/starter_folder."
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "Neighborhood Crime Rates Data was imported here from the City of Toronto Open Data Portal, and table and line graphs were drawn to investigate the growth trend of Toronto crime cases. A result that Toronto crime cases have increased from 2014 to 2019 but decreased from 2019 to 2020 was found. This result matters because it could motivate Toronto Police Service to investigate causes of this decrease in crime cases and to better prevent crimes."
 output:
   bookdown::pdf_document2
 toc: FALSE
@@ -12,26 +12,25 @@ bibliography: references.bib
 ---
 
 # Introduction
-First paragraph is going to be motivational and broad.
 
-Second paragraph is about what was done and what was found.
+Fighting against crimes and reducing crime cases were always the core goals of Toronto Police Service. One of the most efficient measure of crime fighting is to be aware of causes of crimes and what could contribute to the decline in crime cases. 
 
-Third paragraph is about implications.
+In this paper we looked at the growth trend of number of crime cases from 2014 to 2020 in both Toronto and 5 individual neighborhoods with most populations. We created a table and two line graphs to demonstrate our dataset, and found that the number of crime cases in Toronto has experienced a sharp decline from 2019 to 2020 despite the overall increasing trend from 2014 to 2019. Future analysis could focus on finding other data, building regression models, and discovering potential causes of this sharp decline in crime cases. 
 
-The remainder of this paper is: Section \@ref(data) explains the data. 
-Section \@ref(Discussion) covers discussions...... 
+The remainder of this paper is: Section \@ref(data) explains our data, and 
+Section \@ref(Discussion) contains discussions about our findings, weaknesses, and next steps. 
 
 # Data
 ## Data Source And Collection Methods
 This paper uses data on neighborhood crime rates published by the Toronto Police Services on the City of Toronto Open Data Portal (Data 2020); the data was last refreshed on May 6, 2021, and I imported the data as csv file directly using the R package opendatatoronto (Gelfand, 2020). This dataset contains information on numbers of different types of crimes in each of the 140 Toronto neighborhoods from the year 2014 to 2020, together with crime rates of different types of crimes in each neighborhood from 2014 to 2020, where the crime rate is calculated as the crime count per 100,000 population* per year in each neighborhood.
 
-The Toronto Police Service did not specify how exactly the crime cases in this dataset were processed, but it mentions that the crime rates were calculated using "the standard definition by StatsCan" (cite here). In addition, crimes can be reported to the Police and collected through many channels. For example, citizens can voluntarily report crimes they have experienced or observed. It is also possible that the Police will discover crimes on site through daily patrols. Nevertheless, the fact that crimes can be self-reported indicates the possibility of crimes being under-reported, which could result in potential bias of number of crime cases on record. 
+The Toronto Police Service did not specify how exactly the crime cases in this dataset were processed, but we know crimes can be reported to the Police and collected through many channels. For example, citizens can voluntarily report crimes they have experienced or observed. It is also possible that the Police will discover crimes on site through daily patrols. Nevertheless, the fact that crimes can be self-reported indicates the possibility of crimes being under-reported, which could result in potential bias in number of crime cases on record. 
 
 ## Population and Samples
 The population of this dataset is the total population in each Toronto neighborhood in each year from 2014 to 2020. Note that the total population in each neighborhood in this dataset is only a projection estimated by Environics Analytics instead of the true value. The sampling frame is all the crime cases reported and recorded in this dataset. 
 
 ## How Respondents Were Found
-Respondents in our Neighborhood Crime Rates dataset are the reporters of crime cases in each neighborhood. Since crime cases are mainly collected through either self-reporting or police discoveries, our respondents here are discovered by the Toronto Police Service if evidences of crime are observed. In terms of crime data, the action of non-response will cause crime cases in Toronto to be under-reported and under-represented, leading to significant bias in the results of our crime data analysis. 
+Respondents in our dataset are the reporters of crime cases in each neighborhood. Since crime cases are mainly collected through either self-reporting or police discoveries, our respondents here are discovered by the Toronto Police Service if evidences of crime are observed. In terms of crime data, the action of non-response will cause crime cases in Toronto to be under-reported and under-represented, leading to significant bias in the results of our crime data analysis. 
 
 ## Key Features, Major Strengths And Weaknesses
 The most important feature of Open Data Toronto is that it can be easily accessed and reproduced by the general public. While a typical strength of Open Data Toronto would be that it facilitates the flow of information across different government sections and also between the government and the general public, it also ensures the greatest extent of transparency and authenticity while conveying reliable data to citizens. Nevertheless, Open Data Toronto also has a severe weakness, which is the problem of missing information. 
@@ -101,10 +100,9 @@ new_crime_hood %>%
         per neighborhood")
   
 ```
-\newpage
 
 From \@ref(fig:FIgure1), we observed number of total crimes from 10 different neighborhoods in 2014. We then created a line graph using **ggplot2** package (Wickham, 2016) to get an insight on how crime cases developed over the course of 7 years. Here we chose the top 5 neighborhoods with most populations as examples to show the trend of crime growth. 
-\newpage
+
 ```{r Figure1, fig.cap="Crime growth of top 5 neighborhoods with most population from 2014 to 2020", echo = FALSE, message=FALSE}
 # Plot number of crimes on y-axis and year on x-axis for 5 neighborhoods 
 # with highest populations in 2020
@@ -121,37 +119,30 @@ new_crime_hood %>%
   theme_minimal()
 ```
 
-
-
-From Figure \@ref(fig:Figure1), we observed a steady increase in crime cases in Waterfront Communities-The Island from 2014 to 2018 and decrease from 2018 to 2020. For the other 4 neighborhoods, the number of crime cases are relatively steady from 2014 to 2020. 
-
-
-# Discussion
-
-## First discussion point
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
-
 \newpage
 
-\appendix
+From Figure \@ref(fig:Figure1), we observed a steady increase in crime cases in Waterfront Communities-The Island from 2014 to 2018 and decrease from 2018 to 2020. For the other 4 neighborhoods, the number of crime cases are relatively steady from 2014 to 2020. This brought us into the next step, which is to look at how number of crime cases developed for the whole Greater Toronto Area. So we will look at the total crime cases in Toronto from 2014 to 2020.
 
-# Appendix {-}
+```{r Figure2, fig.cap="Crime growth in Toronto from 2014 to 2020", echo = FALSE, message=FALSE}
+new_crime_hood %>%
+  group_by(year) %>%
+  summarise(yearly_crime = sum(num_crime)) %>%
+  ggplot(aes(x=year, y=yearly_crime)) +
+  geom_line() +
+  labs(title = "Toronto Crime Cases",
+       subtitle = "Total number of crime cases from 2014 to 2020",
+       x = "Year",
+       y = "Number of Crimes") +
+  theme_minimal()
 
+```
 
-# Additional details
+From Figure \@ref(fig:Figure2), we observed that Toronto experienced a steady increase in total crime cases from 2014 to 2019, but a sharp decline from 2019 to 2020. Since we also observed that all of the 5 neighborhoods we examined before experienced a decline in crime cases from 2019 to 2020, this brought us into a further question of what has happened in 2019 and 2020 that could cause this sharp decline in crime cases. 
 
+# Discussion, weaknesses and next steps
+In this paper we briefly looked at the crime cases over the course of 7 years from 2014 to 2020 in each of the 5 example neighborhoods, together with the total crime cases in Toronto. We determined that the growth trend of Toronto Crime Cases have changed from positive to negative, and that there might be some external factors that led to an overall decline in the number of crime cases from 2019 to 2020. As we researched on possible variables relating to crimes, we found that unemployment rate, poverty rate, population density, and gun ownership could all be potential causes of changing crime cases (Bhattacharya, 2020). However, due to the weakness that we have no other information in this dataset except pure crime cases and crime rates, we will need to combine this dataset with other data in the next step in order to perform further analysis on what potential factors could influence the growth trend of crime cases. 
 
 \newpage
-
 
 # References
 
