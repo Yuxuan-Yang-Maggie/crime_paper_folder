@@ -1,4 +1,4 @@
-# starter_folder
+# crime_paper_folder
 
 This repository contains all data needed for my paper: Number of Toronto Crime Cases Is Changing From Rising To Declining.
 
