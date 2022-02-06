@@ -2,7 +2,7 @@
 title: "Number of Toronto Crime Cases Is Changing From Rising To Declining"
 author: 
   - Yuxuan Yang
-thanks: "Code and data are available at: https://github.com/Yuxuan-Yang-Maggie/starter_folder."
+thanks: "Code and data are available at: https://github.com/Yuxuan-Yang-Maggie/crime_paper_folder."
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract: "Neighborhood Crime Rates Data was imported here from the City of Toronto Open Data Portal, and table and line graphs were drawn to investigate the growth trend of Toronto crime cases. A result that Toronto crime cases have increased from 2014 to 2019 but decreased from 2019 to 2020 was found. This result matters because it could motivate Toronto Police Service to investigate causes of this decrease in crime cases and to better prevent crimes."
 output:
@@ -47,7 +47,7 @@ Instead of specific summary statistics, I created a table using the `kable` func
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # Read in the data
 library(tidyverse)
-crime <- read_csv("~/starter_folder/inputs/data/crime.csv")
+crime <- read_csv("~/crime_paper_folder/inputs/data/crime.csv")
 #head(crime)
 ```
 
